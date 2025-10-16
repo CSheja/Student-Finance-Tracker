@@ -255,3 +255,33 @@ document.getElementById('btn-export').addEventListener('click', () => {
   a.click();
   URL.revokeObjectURL(url);
 });
+document.getElementById('btn-import').addEventListener('click', () => {
+  const fileInput = document.getElementById('import-file');
+  const file = fileInput.files[0];
+  if (!file) {
+    alert('Please select a JSON file to import.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const importedData = JSON.parse(e.target.result);
+            if (importedData.records) {
+        window.appState.setRecords(importedData.records);
+      }
+      if (importedData.settings) {
+        window.appState.setSettings(importedData.settings);
+      }
+
+      alert('Data imported successfully!');
+      window.ui.renderRecords();
+      window.ui.renderSettings();
+      drawChart();
+    } catch (error) {
+      alert('Failed to import JSON: Invalid file format.');
+      console.error(error);
+    }
+  };
+  reader.readAsText(file);
+});
