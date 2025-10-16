@@ -72,17 +72,25 @@ Browser localStorage API for data persistence
 
 ##Project Structure
 student-finance-tracker/
+
 ├── index.html
 
 ├── styles/
+
 │   └── style.css
 
 ├── scripts/
+
 │   ├── tracker.js       # Initializes UI and draws chart
+
 │   ├── ui.js            # UI rendering, navigation, event binding
+
 │   ├── state.js         # Application state and logic
+
 │   ├── storage.js       # localStorage utility
+
 │   ├── search.js        # Regex utilities
+
 │   └── validators.js    # Input validation
 
 ├── seed.json
