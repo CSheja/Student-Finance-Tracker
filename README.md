@@ -129,6 +129,8 @@ Currency conversion must be entered manually
 
 Keyboard shortcuts may not work in all browsers if conflicting with system shortcuts
 
+Currently, this project does not include automated tests.
+
 
 Author
 
