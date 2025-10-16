@@ -1,74 +1,45 @@
-Student Finance Tracker
+# Student Finance Tracker
 
-Live Demo: https://csheja.github.io/Student-Finance-Tracker/
+Live Demo:https://csheja.github.io/Student-Finance-Tracker/
 
-A simple web application designed to help students in Rwanda manage and track their personal finances.
-Users can add, view, sort, and delete transaction records, visualize weekly spending trends, and set monthly spending caps.
+Student Finance Tracker is a simple web application designed to help students in Rwanda manage and track their personal finances. Users can add, view, sort, and delete transaction records, visualize weekly spending trends, and set monthly spending caps.
+
 
 ##Features
-
-Add, edit, and delete transactions
-
-Search transactions using regular expressions (regex) for advanced filtering
-
-Sort records by date, amount, or description
-
-Weekly spending bar chart with auto-update (powered by Chart.js)
-
-Dashboard displays:
-
-Total number of transactions
-
-Total amount spent
-
-Top spending category
-
-Remaining budget cap
-
-Currency settings:
-
-Set preferred currency (RWF, USD, EUR)
-
-Manual exchange rates with automatic conversion
-
-Keyboard shortcuts:
-
-Ctrl + D: Open Dashboard
-
-Ctrl + R: View Records
-
-Ctrl + N: Add New Transaction
-
-Ctrl + S: Open Settings
-
-Data stored locally in browser using localStorage
-
-Responsive and mobile-friendly design
+- Add, edit, and delete transactions
+- Search transactions using regular expressions (regex) for advanced filtering
+- Sort records by date, amount, or description
+- Weekly spending bar chart with auto-update (powered by Chart.js)
+- Dashboard displays:
+  - Total number of transactions
+  - Total amount spent
+  - Top spending category
+  - Remaining budget cap
+- Currency settings:
+  - Set preferred currency (RWF, USD, EUR)
+  - Manual exchange rates with automatic conversion
+- Keyboard shortcuts:
+  - `Ctrl + D`: Open Dashboard
+  - `Ctrl + R`: View Records
+  - `Ctrl + N`: Add New Transaction
+  - `Ctrl + S`: Open Settings
+- Data stored locally in the browser using `localStorage`
+- Responsive and mobile-friendly design
 
 ##Regex Search Examples
 
 The search bar supports flexible regex filters for transaction descriptions.
+Invalid patterns are handled gracefully without crashing the application.
 
-Pattern	Matches
-food|rent	Descriptions containing food or rent
-^trans	Descriptions starting with "trans"
-milk$	Descriptions ending with "milk"
-(?i)book	Case-insensitive match for "book"
+##Category and Keyboard Mapping
 
-Invalid patterns are handled gracefully without crashing the app.
-
-##Category & Keyboard Mapping
-
-Each transaction requires a category (e.g., Food, Transport, Entertainment).
+Each transaction requires a category (e.g., Food, Transport, Entertainment).  
 Keyboard shortcuts improve usability and allow faster navigation between sections.
 
 ##Technologies Used
-
-HTML5, CSS3, JavaScript (ES6+)
-
-Chart.js for data visualization
-
-Browser localStorage API for data persistence
+- HTML5, CSS3, JavaScript (ES6+)
+- Chart.js for data visualization
+- Browser `localStorage` API for data persistence
 
 ##Project Structure
 student-finance-tracker/
@@ -119,17 +90,22 @@ View real-time charts and dashboard updates
 
 Data remains saved in the browser even after refresh
 
-##Limitations
+##Accessibility (a11y) Notes
+- Basic keyboard navigation is functional.
+- Form fields are clearly labeled.
+- Layout is responsive on mobile and desktop.
+- Focus outlines are visible on interactive elements.
 
-Editing functionality is partially implemented
+##Known Limitations
 
-Settings (cap and exchange rates) are not saved to storage
-
-Currency conversion must be entered manually
-
-Keyboard shortcuts may not work in all browsers if conflicting with system shortcuts
-
-Currently, this project does not include automated tests.
+- Not all elements (e.g., charts) are fully navigable with a keyboard.
+- ARIA attributes are minimal or missing.
+- Color contrast has not been formally tested.
+-Editing functionality is partially implemented
+-Settings (cap and exchange rates) are not saved to storage
+-Currency conversion must be entered manually
+-Keyboard shortcuts may not work in all browsers if conflicting with system shortcuts
+-Currently, this project does not include automated tests.
 
 
 Author
@@ -141,4 +117,4 @@ GitHub: github.com/CSheja
 
 License
 
-This project is licensed under the MIT License.
+This project was created for educational purposes as part of a class assignment. You are free to view and use the code for learning and non-commercial academic use.
