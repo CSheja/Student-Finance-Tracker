@@ -1,4 +1,4 @@
-// state.js — app logic: add, update, delete, get, settings
+// The state.jswill help in the web app logic for adding, updating, deleting, getting, settings
 
 (function(){
   let records = window.storage.loadRecords();
@@ -43,7 +43,6 @@
 
   function setSettings(obj) {
     Object.assign(settings, obj);
-    // you could persist settings too
   }
 
   function getSettings() {

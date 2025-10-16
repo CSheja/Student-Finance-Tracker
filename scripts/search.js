@@ -1,4 +1,4 @@
-// search.js — safe regex compile + highlight matches
+// This file wil serve for safe regex compile and highlight matches
 
 function compileRegex(input, flags = 'i') {
   if (!input) return null;
@@ -14,7 +14,6 @@ function highlightMatches(text, re) {
   return text.replace(re, m => `<mark>${m}</mark>`);
 }
 
-// expose
 window.searchUtils = {
   compileRegex,
   highlightMatches

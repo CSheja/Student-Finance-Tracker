@@ -1,6 +1,7 @@
-// ui.js — handles rendering, navigation, binding events
-
+// This file will be for handling navigation,binding events and rendering
 (function(){
+  let currentEditId = null;
+
   function showSection(id) {
     document.querySelectorAll('.page-section').forEach(sec => {
       sec.style.display = sec.id === id ? 'block' : 'none';
@@ -8,8 +9,7 @@
   }
 
   function bindNav() {
-    const names = ['dashboard','records','add','settings','help'];
-    names.forEach(n => {
+    ['dashboard','records','add','settings','help'].forEach(n => {
       const btn = document.getElementById('nav-' + n);
       if (btn) {
         btn.addEventListener('click', () => {
@@ -19,24 +19,28 @@
     });
   }
 
+  function convertAmount(amountInRWF) {
+    const settings = window.appState.getSettings();
+    const rates = settings.exchangeRates || { RWF: 1, USD: 0, EUR: 0 };
+    const rate = rates[settings.currency] || 1;
+    return amountInRWF * rate;
+  }
+
   function renderRecords(recs, searchRe) {
     const tbody = document.getElementById('records-body');
     tbody.innerHTML = '';
+    const settings = window.appState.getSettings();
     recs.forEach(r => {
       const tr = document.createElement('tr');
-
       function makeTd(content) {
         const td = document.createElement('td');
-        if (searchRe) {
-          td.innerHTML = window.searchUtils.highlightMatches(content, searchRe);
-        } else {
-          td.textContent = content;
-        }
+        if (searchRe) td.innerHTML = window.searchUtils.highlightMatches(content, searchRe);
+        else td.textContent = content;
         return td;
       }
 
       tr.append(makeTd(r.description));
-      tr.append(makeTd(parseFloat(r.amount).toFixed(2)));
+      tr.append(makeTd(convertAmount(r.amount).toFixed(2) + ' ' + settings.currency));
       tr.append(makeTd(r.category));
       tr.append(makeTd(r.date));
 
@@ -44,7 +48,8 @@
       const btnE = document.createElement('button');
       btnE.textContent = 'Edit';
       btnE.addEventListener('click', () => {
-        // TODO: fill form with r, then switch to add section in edit mode
+        fillForm(r);
+        showSection('add');
       });
       tdAct.append(btnE);
 
@@ -69,8 +74,9 @@
 
     document.getElementById('stat-total').textContent = recs.length;
 
-    const sum = recs.reduce((s, r) => s + Number(r.amount), 0);
-    document.getElementById('stat-sum').textContent = sum.toFixed(2);
+    const rawSum = recs.reduce((s, r) => s + Number(r.amount), 0);
+    const sumConv = convertAmount(rawSum);
+    document.getElementById('stat-sum').textContent = sumConv.toFixed(2) + ' ' + set.currency;
 
     const freq = {};
     recs.forEach(r => {
@@ -79,29 +85,27 @@
     const topCat = Object.keys(freq).sort((a,b) => freq[b] - freq[a])[0] || '—';
     document.getElementById('stat-top').textContent = topCat;
 
+    const capEl = document.getElementById('stat-cap');
     if (set.cap != null) {
-      const rem = Number(set.cap) - sum;
-      const el = document.getElementById('stat-cap');
-      if (rem >= 0) {
-        el.textContent = rem.toFixed(2) + ' RWF remaining';
+      const remRaw = set.cap - rawSum;
+      const remConv = convertAmount(remRaw);
+      if (remRaw >= 0) {
+        capEl.textContent = remConv.toFixed(2) + ' ' + set.currency + ' remaining';
       } else {
-        el.textContent = 'Over by ' + Math.abs(rem).toFixed(2) + ' RWF';
+        capEl.textContent = 'Over by ' + Math.abs(remConv).toFixed(2) + ' ' + set.currency;
       }
     } else {
-      document.getElementById('stat-cap').textContent = 'No cap set';
+      capEl.textContent = 'No cap set';
     }
   }
 
   function bindSearchSort() {
     const inp = document.getElementById('search-input');
     const sel = document.getElementById('sort-select');
-
     function apply() {
       const pattern = inp.value.trim();
       const re = window.searchUtils.compileRegex(pattern, 'i');
       let recs = window.appState.getRecords();
-
-      // sort
       const key = sel.value;
       recs.sort((a,b) => {
         if (key === 'amount') return Number(a.amount) - Number(b.amount);
@@ -109,12 +113,18 @@
         if (key === 'date') return a.date.localeCompare(b.date);
         return 0;
       });
-
       renderRecords(recs, re);
     }
-
     inp.addEventListener('input', apply);
     sel.addEventListener('change', apply);
+  }
+
+  function fillForm(r) {
+    document.getElementById('inp-desc').value = r.description;
+    document.getElementById('inp-amt').value = r.amount;
+    document.getElementById('inp-cat').value = r.category;
+    document.getElementById('inp-date').value = r.date;
+    currentEditId = r.id;
   }
 
   function bindForm() {
@@ -126,14 +136,12 @@
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      // clear error spans
       document.getElementById('err-desc').textContent = '';
       document.getElementById('err-amt').textContent = '';
       document.getElementById('err-cat').textContent = '';
       document.getElementById('err-date').textContent = '';
 
       let valid = true;
-
       if (!window.validators.validateDescription(inpDesc.value)) {
         document.getElementById('err-desc').textContent = 'Invalid description';
         valid = false;
@@ -151,13 +159,10 @@
         valid = false;
       }
       if (window.validators.hasDuplicateWord(inpDesc.value)) {
-        document.getElementById('err-desc').textContent += ' (duplicate word) ';
+        document.getElementById('err-desc').textContent += ' (duplicate word)';
         valid = false;
       }
-
-      if (!valid) {
-        return;  // don't add
-      }
+      if (!valid) return;
 
       const obj = {
         description: inpDesc.value.trim(),
@@ -165,14 +170,55 @@
         category: inpCat.value.trim(),
         date: inpDate.value
       };
-      window.appState.addRecord(obj);
+
+      if (currentEditId !== null) {
+        window.appState.updateRecord(currentEditId, obj);
+        currentEditId = null;
+      } else {
+        window.appState.addRecord(obj);
+      }
       form.reset();
       refreshUI();
       showSection('records');
     });
 
     document.getElementById('btn-cancel').addEventListener('click', () => {
+      currentEditId = null;
+      form.reset();
       showSection('records');
+    });
+  }
+
+  function bindKeyboardShortcuts() {
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey) {
+        switch (e.key.toLowerCase()) {
+          case 'n':
+            e.preventDefault();
+            showSection('add');
+            break;
+          case 'd':
+            e.preventDefault();
+            showSection('dashboard');
+            break;
+          case 'r':
+            e.preventDefault();
+            showSection('records');
+            break;
+          case 's':
+            e.preventDefault();
+            showSection('settings');
+            break;
+        }
+      }
+      if (e.key === 'Escape') {
+        const form = document.getElementById('txn-form');
+        if (form && form.style.display !== 'none') {
+          e.preventDefault();
+          form.reset();
+          showSection('records');
+        }
+      }
     });
   }
 
@@ -186,10 +232,12 @@
     showSection('dashboard');
     bindSearchSort();
     bindForm();
+    bindKeyboardShortcuts();
     refreshUI();
+    if (window.drawChart) {
+      window.drawChart();
+    }
   }
 
-  window.ui = {
-    init
-  };
+  window.ui = { init };
 })();

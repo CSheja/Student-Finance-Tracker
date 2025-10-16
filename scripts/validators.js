@@ -1,4 +1,4 @@
-// validators.js — input validation using regex
+// The validators.js will help in validating the user input by using regex for checking the format
 
 function validateDescription(desc) {
   const re = /^\S(?:.*\S)?$/;
@@ -20,13 +20,12 @@ function validateCategory(cat) {
   return re.test(cat);
 }
 
-// advanced: detect duplicate word (e.g. "meal meal")
+// This advanced regex will help me in detecting duplicate words
 function hasDuplicateWord(str) {
   const re = /\b(\w+)\s+\1\b/i;
   return re.test(str);
 }
 
-// expose
 window.validators = {
   validateDescription,
   validateAmount,

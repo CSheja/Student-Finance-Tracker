@@ -1,28 +1,95 @@
-// storage.js — load / save data to localStorage
+// My storage.js file will manage data persistence and app state
 
-const STORAGE_KEY = 'finance:records';
+(function(){
+  const STORAGE_KEY = 'studentFinanceRecords';
+  const SETTINGS_KEY = 'studentFinanceSettings';
 
-function loadRecords() {
-  const s = localStorage.getItem(STORAGE_KEY);
-  if (!s) return [];
-  try {
-    return JSON.parse(s);
-  } catch (err) {
-    console.error('Could not parse records', err);
-    return [];
+  let records = [];
+  let settings = null;
+
+  function loadRecords() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      records = JSON.parse(raw);
+    } else {
+      records = [];
+    }
   }
-}
 
-function saveRecords(arr) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-  } catch (err) {
-    console.error('Could not save records', err);
+  function saveRecords() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
   }
-}
 
-// expose
-window.storage = {
-  loadRecords,
-  saveRecords
-};
+  function loadSettings() {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (raw) {
+      settings = JSON.parse(raw);
+    } else {
+      settings = {
+        cap: null,
+        currency: 'RWF',
+        exchangeRates: {
+          RWF: 1,
+          USD: 0.001,
+          EUR: 0.0009
+        }
+      };
+    }
+  }
+
+  function saveSettings() {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }
+
+  function generateId() {
+    // This is a simple unique id using timestamp + random
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  function addRecord(record) {
+    record.id = generateId();
+    records.push(record);
+    saveRecords();
+  }
+
+  function updateRecord(id, updated) {
+    const idx = records.findIndex(r => r.id === id);
+    if (idx >= 0) {
+      records[idx] = {...records[idx], ...updated};
+      saveRecords();
+    }
+  }
+
+  function deleteRecord(id) {
+    records = records.filter(r => r.id !== id);
+    saveRecords();
+  }
+
+  function getRecords() {
+    return [...records];
+  }
+
+  function getSettings() {
+    if (!settings) {
+      loadSettings();
+    }
+    return {...settings};
+  }
+
+  function setSettings(newSettings) {
+    settings = {...settings, ...newSettings};
+    saveSettings();
+  }
+
+  loadRecords();
+  loadSettings();
+
+  window.appState = {
+    addRecord,
+    updateRecord,
+    deleteRecord,
+    getRecords,
+    getSettings,
+    setSettings
+  };
+})();
