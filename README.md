@@ -1,5 +1,6 @@
-# Student Finance Tracker
+## Student Finance Tracker
 
+Live demo: https://csheja.github.io/Student-Finance-Tracker/
 A simple web application to help students in Rwanda manage and track their personal finances. Users can add, view, sort, and delete transaction records, visualize weekly spending trends, and set monthly spending caps.
 
 ## Features
