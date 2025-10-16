@@ -1,0 +1,170 @@
+/* This is my styling sheet */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #2e2e2e; 
+  color: #c0f0c0;            
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 10px;
+  background: #096009;
+  color: #fff;
+  padding: 8px;
+}
+.skip-link:focus {
+  top: 10px;
+}
+
+/* header */
+header {
+  background: #1f1f1f;
+  padding: 12px 20px;
+}
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+nav button {
+  margin-left: 8px;
+  padding: 6px 14px;
+  background: #098009;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+nav button:focus {
+  outline: 2px solid #a6f8a6;
+}
+
+/* main and cards */
+main {
+  padding: 16px;
+}
+.card {
+  background: #3a3a3a;
+  border: 1px solid #098009;
+  border-radius: 6px;
+  margin: 16px auto;
+  padding: 16px;
+  max-width: 800px;
+  transition: background 0.3s;
+}
+.card:hover {
+  background: #444444;
+}
+.card h2 {
+  margin-top: 0;
+}
+
+/* chart container */
+.chart-container {
+  width: 100%;
+  overflow-x: auto;
+}
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.controls label {
+  font-size: 0.9rem;
+}
+.controls input,
+.controls select {
+  padding: 4px 8px;
+  border: 1px solid #098009;
+  background: #2e2e2e;
+  color: #c0f0c0;
+}
+
+/* table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 8px;
+  border: 1px solid #098009;
+  text-align: left;
+}
+th {
+  background: #098009;
+  color: white;
+}
+
+/* form */
+.form-row {
+  margin-bottom: 10px;
+}
+.form-row label {
+  display: block;
+  margin-bottom: 4px;
+}
+.form-row input,
+.form-row select {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #098009;
+  border-radius: 3px;
+  background: #2e2e2e;
+  color: #c0f0c0;
+}
+.error {
+  color: #ff8080;
+  font-size: 0.85rem;
+}
+
+/* form buttons */
+.form-buttons {
+  margin-top: 12px;
+}
+.form-buttons button {
+  padding: 8px 16px;
+  margin-right: 8px;
+  background: #098009;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.form-buttons button:focus {
+  outline: 2px solid #a6f8a6;
+}
+
+/* footer */
+footer {
+  background: #1f1f1f;
+  color: #c0f0c0;
+  text-align: center;
+  padding: 16px;
+}
+
+/* responsive breakpoints */
+@media screen and (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+  }
+  nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  nav button {
+    margin: 4px 0;
+  }
+}
+

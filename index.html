@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Finance Tracker</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <!-- include Chart.js for charting -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header>
+    <div class="header-inner">
+      <h1>Finance Tracker</h1>
+      <nav>
+        <button id="nav-dashboard">Dashboard</button>
+        <button id="nav-records">Records</button>
+        <button id="nav-add">Add/Edit</button>
+        <button id="nav-settings">Settings</button>
+        <button id="nav-help">Help Center</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    
+    <section id="dashboard" class="page-section card">
+      <h2>Dashboard</h2>
+      <div class="chart-container">
+        <canvas id="myChart" role="img" aria-label="Bar chart of weekly spending"></canvas>
+      </div>
+      <div class="stats">
+        <p>Total records: <span id="stat-total">0</span></p>
+        <p>Total spent: <span id="stat-sum">0.00</span></p>
+        <p>Top category: <span id="stat-top">—</span></p>
+        <p>Cap remaining: <span id="stat-cap" role="status">—</span></p>
+      </div>
+    </section>
+
+    <section id="records" class="page-section card">
+      <h2>Transactions</h2>
+      <div class="controls">
+        <label for="search-input">Search (regex):</label>
+        <input type="text" id="search-input" placeholder="coffee|tea" />
+        <label for="sort-select">Sort by:</label>
+        <select id="sort-select">
+          <option value="date">Date</option>
+          <option value="description">Description</option>
+          <option value="amount">Amount</option>
+        </select>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="records-body">
+          <!-- JS will fill this -->
+        </tbody>
+      </table>
+    </section>
+
+    <section id="add" class="page-section card">
+      <h2>Add / Edit Transaction</h2>
+      <form id="txn-form" novalidate>
+        <div class="form-row">
+          <label for="inp-desc">Description</label>
+          <input type="text" id="inp-desc" name="description" required />
+          <span class="error" id="err-desc"></span>
+        </div>
+        <div class="form-row">
+          <label for="inp-amt">Amount (RWF)</label>
+          <input type="text" id="inp-amt" name="amount" required />
+          <span class="error" id="err-amt"></span>
+        </div>
+        <div class="form-row">
+          <label for="inp-cat">Category</label>
+          <input type="text" id="inp-cat" name="category" list="cat-list" required />
+          <datalist id="cat-list">
+            <option value="Food"></option>
+            <option value="Books"></option>
+            <option value="Transport"></option>
+            <option value="Entertainment"></option>
+            <option value="Fees"></option>
+            <option value="Other"></option>
+          </datalist>
+          <span class="error" id="err-cat"></span>
+        </div>
+        <div class="form-row">
+          <label for="inp-date">Date</label>
+          <input type="date" id="inp-date" name="date" required />
+          <span class="error" id="err-date"></span>
+        </div>
+        <div class="form-buttons">
+          <button type="submit">Save</button>
+          <button type="button" id="btn-cancel">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="settings" class="page-section card">
+      <h2>Settings</h2>
+      <form id="settings-form">
+        <div class="form-row">
+          <label for="inp-cap">Monthly Cap (RWF)</label>
+          <input type="text" id="inp-cap" name="cap" />
+        </div>
+        <div class="form-row">
+          <label for="select-base">Base currency</label>
+          <select id="select-base" name="baseCurrency">
+            <option value="RWF">RWF</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="inp-rate-usd">1 USD = ? RWF</label>
+          <input type="text" id="inp-rate-usd" name="rateUsd" />
+        </div>
+        <div class="form-row">
+          <label for="inp-rate-eur">1 EUR = ? RWF</label>
+          <input type="text" id="inp-rate-eur" name="rateEur" />
+        </div>
+        <div class="form-buttons">
+          <button type="submit">Save Settings</button>
+        </div>
+      </form>
+    </section>
+    <section id="help" class="page-section card" hidden>
+  <h2>Help Center</h2>
+  <dl>
+    <dt>How do I add a transaction?</dt>
+    <dd>Go to “Add/Edit”, fill the form, and click Save.</dd>
+
+    <dt>How do I edit or delete a transaction?</dt>
+    <dd>Use the Edit and Delete buttons next to each record.</dd>
+
+    <dt>What does the chart show?</dt>
+    <dd>It shows your spending trend over the last 7 days by date.</dd>
+
+    <dt>How do I change currencies?</dt>
+    <dd>Visit the Settings page and enter manual rates.</dd>
+
+    <dt>Who built this?</dt>
+    <dd>Built by CSheja for academic use. Contact: <a href="mailto:csheja@alustudent.com">csheja@alustudent.com</a></dd>
+  </dl>
+</section>
+</main>
+
+  <footer>
+    <div class="footer-about">
+      <h2>About</h2>
+      <p>This app helps students in Rwanda track their expenses, set spending caps, view trends, and manage their finances.</p>
+      <p>Contact: <a href="mailto:csheja@alustudent.com">csheja@alustudent.com</a> | GitHub: <a href="https://github.com/CSheja" target="_blank">CSheja</a></p>
+    </div>
+  </footer>
+
+  <script src="scripts/storage.js"></script>
+  <script src="scripts/validators.js"></script>
+  <script src="scripts/search.js"></script>
+  <script src="scripts/state.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/tracker.js"></script>
+</body>
+</html>
+
